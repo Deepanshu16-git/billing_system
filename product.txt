@@ -1,12 +1,5 @@
 1
-detol
-34
-100
-
-
-
-2
-soap
+handwash
 56
 100
 
