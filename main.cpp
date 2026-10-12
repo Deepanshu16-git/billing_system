@@ -221,10 +221,88 @@ void customer::display_all_customer()
     }
 }
 
-class bill : public product, public customer
+class bill
 {
-};
+    string que;
+    int billing_id = 0;
+    string product;
+    int buy_quantity;
+    void add_product();
+    void show_cart();
+    void total_bill();
 
+public:
+    void bill_menu();
+};
+string buy_product;
+int buy_quantity;
+void bill::bill_menu()
+{
+    cout << "--------------------" << endl;
+    cout << "   Bill Management  " << endl;
+    cout << "--------------------" << endl;
+    cout << "1.add items" << endl;
+    cout << "2.show items" << endl;
+    cout << "3.total bill" << endl;
+    cout << "4.exit" << endl;
+    int choice;
+    cout << "enter the value" << endl;
+    cin >> choice;
+
+    switch (choice)
+    {
+    case 1:
+        add_product();
+        break;
+
+    case 2:
+        show_cart();
+        break;
+
+    case 3:
+        total_bill();
+        break;
+
+    case 4:
+        return;
+        break;
+
+    default:
+        cout << "invalid choice" << endl;
+    }
+}
+void bill::add_product()
+{
+    char que;
+    cout << "are u a regular customer(y/n)" << endl;
+    cin >> que;
+    string name;
+    if (que == 'y')
+    {
+        cout << "please enter your name" << endl;
+        cin >> name;
+    }
+    ifstream customers("customers.txt");
+    string customer_name;
+    bool found = false;
+    while (customers >> customer_name)
+    {
+        if (customer_name == name)
+        {
+            found = true;
+        }
+    }
+    if (found == false)
+    {
+        cout << "you are not regular customer" << endl;
+    }
+
+    cout<<"enter the product u want to purchase"<<endl;
+    cin>>buy_product;
+
+
+    
+}
 int main()
 {
 
