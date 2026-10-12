@@ -131,7 +131,7 @@ class customer
 private:
     int customer_id = 0;
     string customer_name;
-    long int phone_number;
+    long long phone_number;
     void add_customer();
     void search_customer();
     void display_all_customer();
@@ -179,7 +179,7 @@ void customer::add_customer()
     ifstream check2("customers.txt");
     int last_id = 0;
     string customer_name;
-    long int phone_number;
+    long long phone_number;
 
     while (check2 >> last_id >> customer_name >> phone_number)
     {
@@ -206,7 +206,7 @@ void customer::search_customer()
     cin >> name;
 
     string customer_name;
-    long int phone_number;
+    long long phone_number;
     bool found = false;
 
     while (customers >> customer_id >> customer_name >> phone_number)
@@ -229,7 +229,7 @@ void customer::display_all_customer()
     ifstream customers("customers.txt");
 
     string customer_name;
-    long int phone_number;
+    long long phone_number;
 
     while (customers>> customer_id >> customer_name >> phone_number)
     {
@@ -305,7 +305,7 @@ void bill::add_product()
 
     ifstream customers("customers.txt");
     string customer_name;
-    long int phone_number;
+    long long phone_number;
     while (customers >> customer_name >> phone_number)
     {
         if (customer_name == name)
