@@ -231,7 +231,7 @@ void customer::display_all_customer()
     string customer_name;
     long long phone_number;
 
-    while (customers>> customer_id >> customer_name >> phone_number)
+    while (customers >> customer_id >> customer_name >> phone_number)
     {
         cout << "customer name is :" << customer_name << endl;
         cout << "mobile number is :" << phone_number << endl;
@@ -305,8 +305,9 @@ void bill::add_product()
 
     ifstream customers("customers.txt");
     string customer_name;
+    int customer_id;
     long long phone_number;
-    while (customers >> customer_name >> phone_number)
+    while (customers >> customer_id >> customer_name >> phone_number)
     {
         if (customer_name == name)
         {
@@ -433,10 +434,6 @@ void bill::total_bill()
     customer_bill << "Billing ID: " << billing_id << endl;
     customer_bill << "Customer Name: " << name << endl;
 
-    customer_bill << "================ Final Bill ================" << endl;
-    customer_bill << "Billing ID: " << billing_id << endl;
-    customer_bill << "Customer Name: " << name << endl;
-
     while (cart >> product_name >> price >> quantity)
     {
         float item_total = price * quantity;
@@ -472,12 +469,57 @@ void bill::total_bill()
     found = false;
 }
 
+class payment
+{
+public:
+    payment()
+    {
+        cout << "please select your payment method" << endl;
+    }
+    void cash();
+    void upi();
+
+    void payment_method()
+    {
+        int que2;
+        cout << "1.cash" << endl;
+        cout << "2.upi" << endl;
+        cout << "please enter your choice" << endl;
+        cin >> que2;
+        switch (que2)
+        {
+        case 1:
+            cash();
+            break;
+        case 2:
+            upi();
+            break;
+        default:
+            cout << "invalid choice" << endl;
+        }
+    }
+};
+
+void payment::cash(){
+  cout<<"please pay money in cash at counter"<<endl;
+}
+
+void payment::upi(){
+    string upi_id;
+    cout<<"please enter ur upi id"<<endl;
+    cin>>upi_id;
+    cout<<"thanks for the id"<<endl;
+    cout<<"notification has been sent successfully"<<endl;
+
+}
+
 int main()
 {
 
     product p;
     customer c;
     bill b;
+    payment p1;
 
     while (true)
     {
@@ -487,7 +529,8 @@ int main()
         cout << "1.product management" << endl;
         cout << "2.customer management" << endl;
         cout << "3.bill management" << endl;
-        cout << "4.exit" << endl;
+        cout << "4.payment" << endl;
+        cout << "5.exit" << endl;
 
         int choice;
         cout << "enter the choice" << endl;
@@ -504,6 +547,9 @@ int main()
             b.bill_menu();
             break;
         case 4:
+            p1.payment_method();
+            break;
+        case 5:
             exit(0);
             break;
         default:
