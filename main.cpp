@@ -1,5 +1,7 @@
 #include <iostream>
 #include <fstream>
+#include <string>
+
 using namespace std;
 class product
 {
@@ -39,6 +41,7 @@ void product::search_product()
             cout << endl;
         }
     }
+    products.close();
     if (found == false)
     {
         cout << "no product found" << endl;
@@ -47,22 +50,27 @@ void product::search_product()
 void product::add_product()
 {
 
+    ifstream check("product.txt");
+    int last_id = 0, quantity;
+    string product_name;
+    float price;
+    while (check >> last_id >> product_name >> price >> quantity)
+    {
+    }
+    check.close();
+
+    product_id = last_id + 1;
     ofstream products("product.txt", ios::app);
-    product_id++;
+
     cout << "enter the product name" << endl;
     cin >> product_name;
     cout << "enter the product price" << endl;
     cin >> price;
     cout << "enter the quantiy of product" << endl;
     cin >> quantity;
-    products << product_id << endl;
-    products << product_name << endl;
-    products << price << endl;
-    products << quantity << endl;
-    products << endl;
-    products << endl;
-    products << endl;
+    products << product_id << " " << product_name << " " << price << " " << quantity << endl;
     products.close();
+    cout << "product added successfully!" << endl;
 }
 void product::display_all_products()
 
@@ -72,6 +80,7 @@ void product::display_all_products()
     string product_name;
     float price;
     int quantity;
+    cout << "-----product list is : -----" << endl;
     while (products >> product_id >> product_name >> price >> quantity)
     {
 
@@ -81,6 +90,7 @@ void product::display_all_products()
         cout << "product quantity is:" << quantity << endl;
         cout << endl;
     }
+    products.close();
 }
 void product::product_menu()
 
@@ -109,8 +119,7 @@ void product::product_menu()
             display_all_products();
             break;
         case 4:
-            exit(0);
-            break;
+            return;
         default:
             cout << "invalid choice" << endl;
         }
@@ -159,8 +168,7 @@ void customer::customer_menu()
             display_all_customer();
             break;
         case 4:
-            exit(0);
-            break;
+            return;
         default:
             cout << "invalid choice" << endl;
         }
@@ -168,22 +176,31 @@ void customer::customer_menu()
 }
 void customer::add_customer()
 {
+    ifstream check2("customers.txt");
+    int last_id = 0;
+    string customer_name;
+    long int phone_number;
+
+    while (check2 >> last_id >> customer_name >> phone_number)
+    {
+    }
+    check2.close();
+
+    customer_id = last_id + 1;
     ofstream customers("customers.txt", ios::app);
-    customer_id++;
     cout << "enter customer name" << endl;
     cin >> customer_name;
     cout << "enter phone number" << endl;
     cin >> phone_number;
 
-    customers << customer_name << endl;
-    customers << phone_number << endl;
+    customers << customer_id << " " << customer_name << " " << phone_number << endl;
     customers << endl;
 
     customers.close();
 }
 void customer::search_customer()
 {
-    ifstream customers("customer.txt");
+    ifstream customers("customers.txt");
     string name;
     cout << "enter name of customer u  want to search" << endl;
     cin >> name;
@@ -192,7 +209,7 @@ void customer::search_customer()
     long int phone_number;
     bool found = false;
 
-    while (customers >> customer_name >> phone_number)
+    while (customers >> customer_id >> customer_name >> phone_number)
     {
         if (customer_name == name)
         {
@@ -205,28 +222,32 @@ void customer::search_customer()
     {
         cout << "no customer found" << endl;
     }
+    customers.close();
 }
 void customer::display_all_customer()
 {
-    ifstream customers("customer.txt");
+    ifstream customers("customers.txt");
 
     string customer_name;
     long int phone_number;
 
-    while (customers >> customer_name >> phone_number)
+    while (customers>> customer_id >> customer_name >> phone_number)
     {
         cout << "customer name is :" << customer_name << endl;
         cout << "mobile number is :" << phone_number << endl;
         cout << endl;
     }
+    customers.close();
 }
 
 class bill
 {
-    string que;
+    char que;
     int billing_id = 0;
-    string product;
+    string buy_product;
     int buy_quantity;
+    string name;
+    bool found = false;
     void add_product();
     void show_cart();
     void total_bill();
@@ -234,41 +255,44 @@ class bill
 public:
     void bill_menu();
 };
-string buy_product;
-int buy_quantity;
+
 void bill::bill_menu()
 {
-    cout << "--------------------" << endl;
-    cout << "   Bill Management  " << endl;
-    cout << "--------------------" << endl;
-    cout << "1.add items" << endl;
-    cout << "2.show items" << endl;
-    cout << "3.total bill" << endl;
-    cout << "4.exit" << endl;
-    int choice;
-    cout << "enter the value" << endl;
-    cin >> choice;
-
-    switch (choice)
+    while (true)
     {
-    case 1:
-        add_product();
-        break;
 
-    case 2:
-        show_cart();
-        break;
+        cout << "--------------------" << endl;
+        cout << "   Bill Management  " << endl;
+        cout << "--------------------" << endl;
+        cout << "1.add items" << endl;
+        cout << "2.show items" << endl;
+        cout << "3.total bill" << endl;
+        cout << "4.exit" << endl;
+        int choice;
+        cout << "enter the value" << endl;
+        cin >> choice;
 
-    case 3:
-        total_bill();
-        break;
+        switch (choice)
+        {
+        case 1:
+            add_product();
+            break;
 
-    case 4:
-        return;
-        break;
+        case 2:
+            show_cart();
+            break;
 
-    default:
-        cout << "invalid choice" << endl;
+        case 3:
+            total_bill();
+            break;
+
+        case 4:
+            return;
+            break;
+
+        default:
+            cout << "invalid choice" << endl;
+        }
     }
 }
 void bill::add_product()
@@ -276,16 +300,13 @@ void bill::add_product()
     char que;
     cout << "are u a regular customer(y/n)" << endl;
     cin >> que;
-    string name;
-    if (que == 'y')
-    {
-        cout << "please enter your name" << endl;
-        cin >> name;
-    }
+    cout << "please enter your name" << endl;
+    cin >> name;
+
     ifstream customers("customers.txt");
     string customer_name;
-    bool found = false;
-    while (customers >> customer_name)
+    long int phone_number;
+    while (customers >> customer_name >> phone_number)
     {
         if (customer_name == name)
         {
@@ -296,13 +317,161 @@ void bill::add_product()
     {
         cout << "you are not regular customer" << endl;
     }
+    customers.close();
+    cout << "enter the product u want to purchase" << endl;
+    cin >> buy_product;
 
-    cout<<"enter the product u want to purchase"<<endl;
-    cin>>buy_product;
+    ifstream products("product.txt");
+    int product_id;
+    string product_name;
+    float price;
+    int quantity;
+    bool product_found = false;
+    float item_price = 0;
+    int item_qty = 0;
 
+    while (products >> product_id >> product_name >> price >> quantity)
+    {
+        if (product_name == buy_product)
+        {
+            product_found = true;
+            item_price = price;
+            item_qty = quantity;
+            break;
+        }
+    }
+    products.close();
 
-    
+    if (product_found == false)
+    {
+        cout << "no product found" << endl;
+        return;
+    }
+    cout << "enter the quantity" << endl;
+    cin >> buy_quantity;
+
+    if (buy_quantity > item_qty)
+    {
+        cout << "insufficient quantity. " << item_qty << endl;
+        return;
+    }
+
+    ofstream cart("cart.txt", ios::app);
+    cart << buy_product << " " << item_price << " " << buy_quantity << endl;
+    cart.close();
+
+    ifstream read_prod("product.txt");
+    ofstream write_prod("temp_product.txt");
+
+    while (read_prod >> product_id >> product_name >> price >> quantity)
+    {
+        if (product_name == buy_product)
+        {
+            quantity = quantity - buy_quantity;
+        }
+        write_prod << product_id << " " << product_name << " " << price << " " << quantity << endl;
+    }
+    read_prod.close();
+    write_prod.close();
+
+    remove("product.txt");
+    rename("temp_product.txt", "product.txt");
+
+    cout << "product added to cart successfully" << endl;
 }
+
+void bill::show_cart()
+{
+    ifstream cart("cart.txt");
+    if (!cart)
+    {
+        cout << "cart is empty" << endl;
+        return;
+    }
+
+    string product_name;
+    float price;
+    int quantity;
+    bool empty = true;
+
+    cout << "--- Cart Items ---" << endl;
+    while (cart >> product_name >> price >> quantity)
+    {
+        empty = false;
+        cout << "product name is:" << product_name << endl;
+        cout << "price:" << price << endl;
+        cout << "quantity:" << quantity << endl;
+        cout << "total:" << (price * quantity) << endl;
+        cout << "--------------------" << endl;
+    }
+    cart.close();
+
+    if (empty)
+    {
+        cout << "cart is empty" << endl;
+    }
+}
+
+void bill::total_bill()
+{
+    ifstream cart("cart.txt");
+    if (!cart)
+    {
+        cout << "cart is empty" << endl;
+        return;
+    }
+
+    string product_name;
+    float price;
+    int quantity;
+    float total = 0;
+
+    string bill_filename = name + "_bill.txt";
+    ofstream customer_bill(bill_filename, ios::app);
+
+    customer_bill << "================ Final Bill ================" << endl;
+    customer_bill << "Billing ID: " << billing_id << endl;
+    customer_bill << "Customer Name: " << name << endl;
+
+    customer_bill << "================ Final Bill ================" << endl;
+    customer_bill << "Billing ID: " << billing_id << endl;
+    customer_bill << "Customer Name: " << name << endl;
+
+    while (cart >> product_name >> price >> quantity)
+    {
+        float item_total = price * quantity;
+        total = total + item_total;
+
+        cout << product_name << " x " << quantity << " = " << item_total << endl;
+        customer_bill << product_name << " x " << quantity << " = " << item_total << endl;
+    }
+    cart.close();
+
+    cout << "--------------------------------------------" << endl;
+    cout << "subtotal: " << total << endl;
+    customer_bill << "--------------------------------------------" << endl;
+    customer_bill << "subtotal: " << total << endl;
+
+    float discount = 0;
+    if (found == true)
+    {
+        discount = total * 0.10f;
+        cout << "discount (10%): " << discount << endl;
+        customer_bill << "discount (10%): " << discount << endl;
+    }
+
+    float final_bill = total - discount;
+    cout << "total bill: " << final_bill << endl;
+    cout << "============================================" << endl;
+
+    customer_bill << "total bill: " << final_bill << endl;
+    customer_bill << "============================================\n\n";
+    customer_bill.close();
+
+    remove("cart.txt");
+    found = false;
+}
+
 int main()
 {
 
@@ -332,7 +501,7 @@ int main()
             c.customer_menu();
             break;
         case 3:
-            // c.customer_menu();
+            b.bill_menu();
             break;
         case 4:
             exit(0);
